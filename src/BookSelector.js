@@ -1,16 +1,20 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 class BookSelector extends Component {
+    static propTypes = {
+        book: PropTypes.object.isRequired,
+        defaultShelf: PropTypes.string.isRequired,
+        SetBookShelf: PropTypes.func.isRequired
+    }
+
     state = {
         selection: this.props.defaultShelf
     }
 
-    handleSelection = sel => {       
-        this.setState({ selection: sel});
-        const book = {
-            id: this.props.id
-        }
-        this.props.SetBookShelf(book, sel);
+    handleSelection = sel => {
+        this.setState({ selection: sel });
+        this.props.SetBookShelf(this.props.book, sel);
     };
 
     render() {

@@ -1,40 +1,42 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Book from './Book'
+import PropTypes from 'prop-types'
 
-class BookShelf extends Component {
+const BookShelf = props => {
 
-    filterBookByShelf = (books, shelf) => {
+    function filterBookByShelf(books, shelf) {
         const result = books.filter((b) => {
-          return b.shelf === shelf
-        })
+            return b.shelf === shelf
+        });
         return result;
-      }
-
-    render() {
-
-        const {shelfTitle, books, shelfType, SetBookShelf } = this.props;
-        const bookShelf = this.filterBookByShelf(books, shelfType);
-
-        return (
-            <div className="bookshelf">
-                <h2 className="bookshelf-title">{shelfTitle}</h2>
-                <div className="bookshelf-books">
-                    <ol className="books-grid">
-                        {bookShelf.map((book) => (
-                            <Book 
-                                key={book.id} 
-                                id={book.id} 
-                                title={book.tile} 
-                                authors={book.authors} 
-                                thumbnail={book.imageLinks.thumbnail}
-                                shelf={book.shelf}
-                                SetBookShelf={SetBookShelf} />
-                        ))}
-                    </ol>
-                </div>
-            </div>
-        )
     }
+
+    const { shelfTitle, books, shelfType, SetBookShelf } = props;
+    const bookShelf = filterBookByShelf(books, shelfType);
+
+    return (
+        <div className="bookshelf">
+            <h2 className="bookshelf-title">{shelfTitle}</h2>
+            <div className="bookshelf-books">
+                <ol className="books-grid">
+                    {bookShelf.map((book) => (
+                        <Book key={book.id}
+                            book={book}
+                            SetBookShelf={SetBookShelf}
+                        />
+                    ))}
+                </ol>
+            </div>
+        </div>
+    )
+
+}
+
+BookShelf.propTypes = {
+    books: PropTypes.object.isRequired,
+    SetBookShelf: PropTypes.func.isRequired,
+    shelfType: PropTypes.string.isRequired,
+    shelfTitle: PropTypes.string.isRequired
 }
 
 export default BookShelf

@@ -12,47 +12,51 @@ class BooksApp extends React.Component {
   }
 
   componentDidMount() {
+    // get all books of user
     BooksAPI.getAll()
       .then((books) => {
         this.setState((currentState) => ({
           books
-        }))
-      })
+        }));
+      });
   }
 
   SetBookShelf = (book, shelf) => {
-    const updatedBook = this.state.books
-                        .filter(b => b.id === book.id);
-    updatedBook[0].shelf = shelf;
-
+    book.shelf = shelf;
+    //update user book based on new shelf
     BooksAPI.update(book, shelf)
       .then((bookResult) => {
         this.setState((currentState) => ({
           books: currentState.books
-          .filter(b => b.id !== updatedBook.id)
-          .concat([updatedBook])
-          }));
-        });      
+            .filter(b => b.id !== book.id)
+            .concat([book])
+        }));
+      });
   };
-  
+
   render() {
 
     return (
       <div className="app">
         <Route path='/search' render={({ history }) => (
-          <SearchBook goBack={() => {
-            history.push('/')
-          }}/>
-        )} />
+          <SearchBook userBooks={this.state.books}
+            SetBookShelf={this.SetBookShelf}
+            goBack={() => {
+              history.push('/')
+            }}
+          />
+        )}
+        />
         <Route exact path='/' render={() => (
-            <BookList books={this.state.books} 
-                      SetBookShelf={this.SetBookShelf}
-                      onNavigate={() => {
-                        this.setState(() => ({
-                          showSearchPage:true
-                        }))
-                      }} />
-          )} />
+          <BookList books={this.state.books}
+            SetBookShelf={this.SetBookShelf}
+            onNavigate={() => {
+              this.setState(() => ({
+                showSearchPage: true
+              }))
+            }}
+          />
+        )} />
       </div>
     )
   }
